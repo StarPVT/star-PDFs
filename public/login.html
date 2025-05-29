@@ -18,6 +18,29 @@
       <input type="password" id="password" name="password" required>
       <button type="submit">Login</button>
     </form>
+    <p id="error-message" style="color: red;"></p>
   </main>
+  <script>
+    document.getElementById('login-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const password = document.getElementById('password').value;
+      const errorMessage = document.getElementById('error-message');
+      try {
+        const response = await fetch('/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: `password=${encodeURIComponent(password)}`
+        });
+        if (response.ok) {
+          window.location.href = '/manage';
+        } else {
+          const text = await response.text();
+          errorMessage.textContent = text || 'Login failed';
+        }
+      } catch (err) {
+        errorMessage.textContent = 'Error connecting to server';
+      }
+    });
+  </script>
 </body>
 </html>
