@@ -337,24 +337,30 @@
       }
     }
 
-    function searchPDF() {
-      const searchInput = document.getElementById('searchInput');
-      const result = document.getElementById('result');
-      const query = searchInput.value.trim();
-      
-      if (!query) {
-        result.innerHTML = '<div class="error">Please enter a report card name to search.</div>';
+    async function searchPDF() {
+      const searchInput = document.getElementById('searchInput').value.trim();
+      const resultDiv = document.getElementById('result');
+
+      if (!searchInput) {
+        resultDiv.innerHTML = '<p class="error">Please enter a report card name.</p>';
         return;
       }
-      
-      // Simulate search functionality - replace with your actual search logic
-      result.innerHTML = '<div>Searching...</div>';
-      
-      // This is where you would integrate with your existing search functionality
-      // For now, this is just a placeholder
-      setTimeout(() => {
-        result.innerHTML = '<div class="error">Please integrate this with your existing search functionality in script.js</div>';
-      }, 1000);
+
+      // Show loading state
+      resultDiv.innerHTML = '<div>Searching...</div>';
+
+      try {
+        const response = await fetch(`/search?name=${encodeURIComponent(searchInput)}`);
+        const data = await response.json();
+
+        if (data.filePath) {
+          resultDiv.innerHTML = `<p class="success">Found: <a href="${data.filePath}" download>Download ${data.fileName}</a></p>`;
+        } else {
+          resultDiv.innerHTML = `<p class="error">${data.error}</p>`;
+        }
+      } catch (err) {
+        resultDiv.innerHTML = '<p class="error">Error searching for report card. Please try again.</p>';
+      }
     }
 
     // Allow Enter key to trigger search
