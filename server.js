@@ -3,12 +3,21 @@ const fs = require('fs').promises;
 const path = require('path');
 const multer = require('multer');
 const session = require('express-session');
+const Redis = require('redis');
+const RedisStore = require('connect-redis').default;
 const app = express();
 const port = process.env.PORT || 3000;
 
-// Configure session middleware
+// Initialize Redis client
+const redisClient = Redis.createClient({
+  url: process.env.REDIS_URL || 'redis://localhost:6379'
+});
+redisClient.connect().catch(console.error);
+
+// Configure session middleware with RedisStore
 app.use(session({
-  secret: process.env.SESSION_SECRET || 'your-secret-key', // Use env variable in production
+  store: new RedisStore({ client: redisClient }),
+  secret: process.env.SESSION_SECRET || 'your-secret-key',
   resave: false,
   saveUninitialized: false,
   cookie: { secure: process.env.NODE_ENV === 'production' }
@@ -57,7 +66,8 @@ app.get('/login', (req, res) => {
 // Login endpoint
 app.use(express.urlencoded({ extended: true }));
 app.post('/login', (req, res) => {
-  const password = process.env.ADMIN_PASSWORD || 'admin123'; // Use env variable in production
+  const password = process.env.ADMIN_PASSWORD || 'admin123';
+  console.log('Received password:', req.body.password, 'Expected:', password); // Debug log
   if (req.body.password === password) {
     req.session.authenticated = true;
     res.redirect('/manage');
@@ -110,7 +120,7 @@ app.delete('/api/pdf/:filename', isAuthenticated, async (req, res) => {
   }
 });
 
-// Search endpoint (unchanged)
+// Search endpoint
 app.get('/search', async (req, res) => {
   const query = req.query.name;
   if (!query) {
