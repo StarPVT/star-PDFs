@@ -43,7 +43,14 @@
         
         <!-- PDF List Section -->
         <div class="section">
-            <h2>📚 Current Report Cards</h2>
+            <div class="section-header">
+                <h2>📚 Current Report Cards</h2>
+                <div class="search-container">
+                    <input type="text" id="searchBox" class="search-box" placeholder="Search report cards...">
+                    <button id="clearSearch" class="clear-search" disabled>Clear</button>
+                </div>
+                <button id="deleteAllBtn" class="delete-all-btn" disabled>🗑️ Delete All</button>
+            </div>
             <div id="listLoading" class="loading">
                 <div class="spinner"></div>
                 Loading report cards...
@@ -54,14 +61,112 @@
     
     <script>
         let selectedFiles = [];
+        let allPDFs = [];
+        let filteredPDFs = [];
         
         // Initialize page
         document.addEventListener('DOMContentLoaded', function() {
             loadPDFs();
             setupFileHandlers();
+            setupSearchHandlers();
         });
         
-        // Setup file upload handlers
+        // Setup search handlers
+        function setupSearchHandlers() {
+            const searchBox = document.getElementById('searchBox');
+            const clearSearch = document.getElementById('clearSearch');
+            const deleteAllBtn = document.getElementById('deleteAllBtn');
+            
+            searchBox.addEventListener('input', handleSearch);
+            clearSearch.addEventListener('click', clearSearchHandler);
+            deleteAllBtn.addEventListener('click', deleteAllPDFs);
+        }
+        
+        function handleSearch(e) {
+            const searchTerm = e.target.value.toLowerCase().trim();
+            const clearBtn = document.getElementById('clearSearch');
+            
+            clearBtn.disabled = searchTerm === '';
+            
+            if (searchTerm === '') {
+                filteredPDFs = [...allPDFs];
+            } else {
+                filteredPDFs = allPDFs.filter(file => 
+                    file.toLowerCase().includes(searchTerm)
+                );
+            }
+            
+            displayPDFs(filteredPDFs);
+        }
+        
+        function clearSearchHandler() {
+            const searchBox = document.getElementById('searchBox');
+            const clearBtn = document.getElementById('clearSearch');
+            
+            searchBox.value = '';
+            clearBtn.disabled = true;
+            filteredPDFs = [...allPDFs];
+            displayPDFs(filteredPDFs);
+        }
+        
+        async function deleteAllPDFs() {
+            const filesToDelete = filteredPDFs.length > 0 ? filteredPDFs : allPDFs;
+            const searchTerm = document.getElementById('searchBox').value.trim();
+            
+            let confirmMessage;
+            if (searchTerm && filteredPDFs.length !== allPDFs.length) {
+                confirmMessage = `Are you sure you want to delete all ${filteredPDFs.length} filtered report cards?`;
+            } else {
+                confirmMessage = `Are you sure you want to delete all ${allPDFs.length} report cards? This action cannot be undone.`;
+            }
+            
+            if (!confirm(confirmMessage)) {
+                return;
+            }
+            
+            const deleteAllBtn = document.getElementById('deleteAllBtn');
+            deleteAllBtn.disabled = true;
+            deleteAllBtn.textContent = 'Deleting...';
+            
+            let successCount = 0;
+            let failCount = 0;
+            let errors = [];
+            
+            for (const fileName of filesToDelete) {
+                try {
+                    const response = await fetch(`/api/pdf/${fileName}`, {
+                        method: 'DELETE'
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (response.ok) {
+                        successCount++;
+                    } else {
+                        failCount++;
+                        errors.push(`${fileName}: ${result.error || 'Delete failed'}`);
+                    }
+                } catch (error) {
+                    failCount++;
+                    errors.push(`${fileName}: Delete failed`);
+                }
+            }
+            
+            // Show results
+            if (successCount > 0 && failCount === 0) {
+                showMessage(`Successfully deleted ${successCount} report card${successCount > 1 ? 's' : ''}!`, 'success');
+            } else if (successCount > 0 && failCount > 0) {
+                showMessage(`Deleted ${successCount} files successfully, ${failCount} failed. Errors: ${errors.join(', ')}`, 'error');
+            } else {
+                showMessage(`All deletions failed. Errors: ${errors.join(', ')}`, 'error');
+            }
+            
+            // Reset search and reload
+            clearSearchHandler();
+            loadPDFs();
+            
+            deleteAllBtn.textContent = '🗑️ Delete All';
+        }
         function setupFileHandlers() {
             const fileInput = document.getElementById('fileInput');
             const uploadArea = document.querySelector('.upload-area');
@@ -220,7 +325,10 @@
                 const data = await response.json();
                 
                 if (response.ok) {
-                    displayPDFs(data.files);
+                    allPDFs = data.files;
+                    filteredPDFs = [...allPDFs];
+                    displayPDFs(filteredPDFs);
+                    updateDeleteAllButton();
                 } else {
                     showMessage(data.error || 'Failed to load report cards', 'error');
                 }
@@ -233,15 +341,26 @@
         
         function displayPDFs(files) {
             const pdfList = document.getElementById('pdfList');
+            const searchTerm = document.getElementById('searchBox').value.toLowerCase().trim();
             
             if (files.length === 0) {
-                pdfList.innerHTML = `
-                    <div class="empty-state">
-                        <div class="empty-state-icon">📄</div>
-                        <p>No report cards uploaded yet.</p>
-                        <p>Upload your first PDF using the form above.</p>
-                    </div>
-                `;
+                if (allPDFs.length === 0) {
+                    pdfList.innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-state-icon">📄</div>
+                            <p>No report cards uploaded yet.</p>
+                            <p>Upload your first PDF using the form above.</p>
+                        </div>
+                    `;
+                } else {
+                    pdfList.innerHTML = `
+                        <div class="no-results">
+                            <div class="empty-state-icon">🔍</div>
+                            <p>No report cards found matching "${searchTerm}"</p>
+                            <p>Try adjusting your search terms.</p>
+                        </div>
+                    `;
+                }
                 return;
             }
             
@@ -256,6 +375,11 @@
                     </div>
                 </div>
             `).join('');
+        }
+        
+        function updateDeleteAllButton() {
+            const deleteAllBtn = document.getElementById('deleteAllBtn');
+            deleteAllBtn.disabled = allPDFs.length === 0;
         }
         
         function viewPDF(fileName) {
