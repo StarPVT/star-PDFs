@@ -13,34 +13,75 @@
         
         body {
             font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background-color: #f0f0f0;
             min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            color: #333;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #1e3a8a 0%, #0ea5e9 100%);
+            padding: 20px 0;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .logo-container {
+            margin-bottom: 15px;
+        }
+
+        .school-logo {
+            height: 70px;
+            width: auto;
+            max-width: 200px;
+            object-fit: contain;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 8px;
+            border-radius: 10px;
+        }
+
+        .school-name {
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+            margin-bottom: 5px;
+        }
+
+        .subtitle {
+            color: #bfdbfe;
+            font-size: 16px;
+        }
+        
+        .main-content {
+            flex: 1;
             display: flex;
             align-items: center;
             justify-content: center;
+            padding: 40px 20px;
         }
         
         .login-container {
             background: white;
             padding: 40px;
-            border-radius: 10px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
             width: 100%;
             max-width: 400px;
         }
         
-        .school-header {
+        .login-header {
             text-align: center;
             margin-bottom: 30px;
         }
         
-        .school-header h1 {
-            color: #333;
+        .login-header h1 {
+            color: #2c3e50;
             font-size: 24px;
             margin-bottom: 10px;
         }
         
-        .school-header p {
+        .login-header p {
             color: #666;
             font-size: 14px;
         }
@@ -63,57 +104,90 @@
         
         input[type="password"] {
             width: 100%;
-            padding: 12px;
-            border: 2px solid #ddd;
-            border-radius: 5px;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 25px;
             font-size: 16px;
+            outline: none;
             transition: border-color 0.3s;
         }
         
         input[type="password"]:focus {
-            outline: none;
-            border-color: #667eea;
+            border-color: #0ea5e9;
         }
         
         .login-btn {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(45deg, #1e3a8a, #0ea5e9);
             color: white;
-            padding: 12px;
+            padding: 15px 30px;
             border: none;
-            border-radius: 5px;
+            border-radius: 25px;
             font-size: 16px;
             font-weight: bold;
             cursor: pointer;
-            transition: transform 0.2s;
+            transition: transform 0.2s, box-shadow 0.2s;
         }
         
         .login-btn:hover {
             transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(14, 165, 233, 0.4);
         }
         
         .error-message {
             color: #e74c3c;
+            background: #fdf2f2;
+            border: 1px solid #fecaca;
             text-align: center;
             margin-top: 15px;
+            padding: 10px;
+            border-radius: 10px;
             font-size: 14px;
+        }
+
+        @media (max-width: 600px) {
+            .main-content {
+                padding: 20px 15px;
+            }
+            
+            .login-container {
+                padding: 30px 20px;
+            }
+
+            .school-logo {
+                height: 50px;
+            }
+
+            .school-name {
+                font-size: 20px;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="login-container">
-        <div class="school-header">
-            <h1>Star Private Secondary School</h1>
-            <p>Report Card Management System</p>
+    <div class="header">
+        <div class="logo-container">
+            <img src="logo.png" alt="Star Private Secondary School Logo" class="school-logo" onerror="this.style.display='none'">
         </div>
-        
-        <form class="login-form" method="POST" action="/login">
-            <div class="form-group">
-                <label for="password">Admin Password:</label>
-                <input type="password" id="password" name="password" required>
+        <div class="school-name">Star Private Secondary School</div>
+        <div class="subtitle">Report Card Management System</div>
+    </div>
+
+    <div class="main-content">
+        <div class="login-container">
+            <div class="login-header">
+                <h1>Admin Login</h1>
+                <p>Access the report card management system</p>
             </div>
             
-            <button type="submit" class="login-btn">Login</button>
-        </form>
+            <form class="login-form" method="POST" action="/login">
+                <div class="form-group">
+                    <label for="password">Admin Password:</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                
+                <button type="submit" class="login-btn">Login</button>
+            </form>
+        </div>
     </div>
 </body>
 </html>

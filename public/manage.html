@@ -4,252 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Star Private Secondary School - Report Card Management</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: Arial, sans-serif;
-            background: #f5f5f5;
-            min-height: 100vh;
-        }
-        
-        .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 20px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-        
-        .header-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .header h1 {
-            font-size: 24px;
-        }
-        
-        .logout-btn {
-            background: rgba(255, 255, 255, 0.2);
-            color: white;
-            padding: 8px 16px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            text-decoration: none;
-            transition: background 0.3s;
-        }
-        
-        .logout-btn:hover {
-            background: rgba(255, 255, 255, 0.3);
-        }
-        
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        
-        .section {
-            background: white;
-            border-radius: 10px;
-            padding: 30px;
-            margin-bottom: 30px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        }
-        
-        .section h2 {
-            color: #333;
-            margin-bottom: 20px;
-            font-size: 20px;
-        }
-        
-        .upload-area {
-            border: 2px dashed #667eea;
-            border-radius: 10px;
-            padding: 40px;
-            text-align: center;
-            background: #f8f9ff;
-            margin-bottom: 20px;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        
-        .upload-area:hover {
-            border-color: #764ba2;
-            background: #f0f2ff;
-        }
-        
-        .upload-area.dragover {
-            border-color: #764ba2;
-            background: #e8ebff;
-        }
-        
-        .upload-icon {
-            font-size: 48px;
-            color: #667eea;
-            margin-bottom: 20px;
-        }
-        
-        .upload-text {
-            color: #333;
-            font-size: 18px;
-            margin-bottom: 10px;
-        }
-        
-        .upload-subtext {
-            color: #666;
-            font-size: 14px;
-        }
-        
-        #fileInput {
-            display: none;
-        }
-        
-        .upload-btn {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 12px 24px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            margin-top: 15px;
-            transition: transform 0.2s;
-        }
-        
-        .upload-btn:hover {
-            transform: translateY(-2px);
-        }
-        
-        .upload-btn:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none;
-        }
-        
-        .pdf-list {
-            display: grid;
-            gap: 15px;
-        }
-        
-        .pdf-item {
-            display: flex;
-            justify-content: between;
-            align-items: center;
-            padding: 15px;
-            background: #f8f9fa;
-            border-radius: 8px;
-            border-left: 4px solid #667eea;
-        }
-        
-        .pdf-info {
-            flex: 1;
-        }
-        
-        .pdf-name {
-            font-weight: bold;
-            color: #333;
-            margin-bottom: 5px;
-        }
-        
-        .pdf-actions {
-            display: flex;
-            gap: 10px;
-        }
-        
-        .btn {
-            padding: 8px 16px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 14px;
-            transition: all 0.3s;
-        }
-        
-        .btn-view {
-            background: #28a745;
-            color: white;
-        }
-        
-        .btn-view:hover {
-            background: #218838;
-        }
-        
-        .btn-delete {
-            background: #dc3545;
-            color: white;
-        }
-        
-        .btn-delete:hover {
-            background: #c82333;
-        }
-        
-        .message {
-            padding: 15px;
-            border-radius: 5px;
-            margin-bottom: 20px;
-            font-weight: bold;
-        }
-        
-        .message.success {
-            background: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-        
-        .message.error {
-            background: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
-        
-        .loading {
-            display: none;
-            text-align: center;
-            padding: 20px;
-            color: #667eea;
-        }
-        
-        .spinner {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid #f3f3f3;
-            border-top: 3px solid #667eea;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-        
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        
-        .empty-state {
-            text-align: center;
-            padding: 40px;
-            color: #666;
-        }
-        
-        .empty-state-icon {
-            font-size: 48px;
-            margin-bottom: 20px;
-            opacity: 0.5;
-        }
-    </style>
+    <link rel="stylesheet" href="manage.css">
 </head>
 <body>
     <div class="header">
-        <div class="header-content">
-            <h1>Report Card Management</h1>
+        <div class="logo-container">
+            <img src="logo.png" alt="Star Private Secondary School Logo" class="school-logo" onerror="this.style.display='none'">
+        </div>
+        <div class="school-name">Star Private Secondary School</div>
+        <div class="subtitle">Report Card Management System</div>
+        <div class="header-actions">
             <a href="/logout" class="logout-btn">Logout</a>
         </div>
     </div>
@@ -262,13 +26,13 @@
             
             <div class="upload-area" onclick="document.getElementById('fileInput').click()">
                 <div class="upload-icon">📁</div>
-                <div class="upload-text">Click to select PDF file</div>
-                <div class="upload-subtext">or drag and drop a PDF file here</div>
+                <div class="upload-text">Click to select PDF files</div>
+                <div class="upload-subtext">or drag and drop PDF files here</div>
             </div>
             
-            <input type="file" id="fileInput" accept=".pdf">
+            <input type="file" id="fileInput" accept=".pdf" multiple>
             <div style="text-align: center;">
-                <button id="uploadBtn" class="upload-btn" disabled>Upload Report Card</button>
+                <button id="uploadBtn" class="upload-btn" disabled>Upload Report Cards</button>
             </div>
             
             <div id="uploadLoading" class="loading">
@@ -289,7 +53,7 @@
     </div>
     
     <script>
-        let selectedFile = null;
+        let selectedFiles = [];
         
         // Initialize page
         document.addEventListener('DOMContentLoaded', function() {
@@ -313,15 +77,22 @@
         }
         
         function handleFileSelect(e) {
-            const file = e.target.files[0];
-            if (file && file.type === 'application/pdf') {
-                selectedFile = file;
-                updateUploadUI(file.name);
-            } else {
-                showMessage('Please select a valid PDF file', 'error');
-                selectedFile = null;
+            const files = Array.from(e.target.files);
+            const pdfFiles = files.filter(file => file.type === 'application/pdf');
+            
+            if (pdfFiles.length === 0) {
+                showMessage('Please select at least one valid PDF file', 'error');
+                selectedFiles = [];
                 updateUploadUI();
+                return;
             }
+            
+            if (pdfFiles.length !== files.length) {
+                showMessage(`${files.length - pdfFiles.length} non-PDF files were ignored`, 'error');
+            }
+            
+            selectedFiles = pdfFiles;
+            updateUploadUI();
         }
         
         function handleDragOver(e) {
@@ -337,39 +108,51 @@
             e.preventDefault();
             e.currentTarget.classList.remove('dragover');
             
-            const files = e.dataTransfer.files;
-            if (files.length > 0) {
-                const file = files[0];
-                if (file.type === 'application/pdf') {
-                    selectedFile = file;
-                    document.getElementById('fileInput').files = files;
-                    updateUploadUI(file.name);
-                } else {
-                    showMessage('Please select a valid PDF file', 'error');
-                }
+            const files = Array.from(e.dataTransfer.files);
+            const pdfFiles = files.filter(file => file.type === 'application/pdf');
+            
+            if (pdfFiles.length === 0) {
+                showMessage('Please drop at least one valid PDF file', 'error');
+                return;
             }
+            
+            if (pdfFiles.length !== files.length) {
+                showMessage(`${files.length - pdfFiles.length} non-PDF files were ignored`, 'error');
+            }
+            
+            selectedFiles = pdfFiles;
+            
+            // Update the file input to reflect the selected files
+            const fileInput = document.getElementById('fileInput');
+            const dt = new DataTransfer();
+            pdfFiles.forEach(file => dt.items.add(file));
+            fileInput.files = dt.files;
+            
+            updateUploadUI();
         }
         
-        function updateUploadUI(fileName = null) {
+        function updateUploadUI() {
             const uploadBtn = document.getElementById('uploadBtn');
             const uploadArea = document.querySelector('.upload-area');
             
-            if (fileName) {
-                uploadBtn.textContent = `Upload "${fileName}"`;
+            if (selectedFiles.length > 0) {
+                if (selectedFiles.length === 1) {
+                    uploadBtn.textContent = `Upload "${selectedFiles[0].name}"`;
+                    uploadArea.querySelector('.upload-text').textContent = `Selected: ${selectedFiles[0].name}`;
+                } else {
+                    uploadBtn.textContent = `Upload ${selectedFiles.length} Files`;
+                    uploadArea.querySelector('.upload-text').textContent = `Selected: ${selectedFiles.length} PDF files`;
+                }
                 uploadBtn.disabled = false;
-                uploadArea.querySelector('.upload-text').textContent = `Selected: ${fileName}`;
             } else {
-                uploadBtn.textContent = 'Upload Report Card';
+                uploadBtn.textContent = 'Upload Report Cards';
                 uploadBtn.disabled = true;
-                uploadArea.querySelector('.upload-text').textContent = 'Click to select PDF file';
+                uploadArea.querySelector('.upload-text').textContent = 'Click to select PDF files';
             }
         }
         
         async function uploadFile() {
-            if (!selectedFile) return;
-            
-            const formData = new FormData();
-            formData.append('pdf', selectedFile);
+            if (selectedFiles.length === 0) return;
             
             const uploadBtn = document.getElementById('uploadBtn');
             const uploadLoading = document.getElementById('uploadLoading');
@@ -377,29 +160,52 @@
             uploadBtn.disabled = true;
             uploadLoading.style.display = 'block';
             
-            try {
-                const response = await fetch('/api/upload', {
-                    method: 'POST',
-                    body: formData
-                });
+            let successCount = 0;
+            let failCount = 0;
+            let errors = [];
+            
+            for (let i = 0; i < selectedFiles.length; i++) {
+                const file = selectedFiles[i];
+                const formData = new FormData();
+                formData.append('pdf', file);
                 
-                const result = await response.json();
-                
-                if (response.ok) {
-                    showMessage(`Report card "${result.fileName}" uploaded successfully!`, 'success');
-                    selectedFile = null;
-                    document.getElementById('fileInput').value = '';
-                    updateUploadUI();
-                    loadPDFs(); // Refresh the list
-                } else {
-                    showMessage(result.error || 'Upload failed', 'error');
+                try {
+                    const response = await fetch('/api/upload', {
+                        method: 'POST',
+                        body: formData
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (response.ok) {
+                        successCount++;
+                    } else {
+                        failCount++;
+                        errors.push(`${file.name}: ${result.error || 'Upload failed'}`);
+                    }
+                } catch (error) {
+                    failCount++;
+                    errors.push(`${file.name}: Upload failed`);
                 }
-            } catch (error) {
-                showMessage('Upload failed. Please try again.', 'error');
-            } finally {
-                uploadBtn.disabled = false;
-                uploadLoading.style.display = 'none';
             }
+            
+            // Show results
+            if (successCount > 0 && failCount === 0) {
+                showMessage(`Successfully uploaded ${successCount} report card${successCount > 1 ? 's' : ''}!`, 'success');
+            } else if (successCount > 0 && failCount > 0) {
+                showMessage(`Uploaded ${successCount} files successfully, ${failCount} failed. Errors: ${errors.join(', ')}`, 'error');
+            } else {
+                showMessage(`All uploads failed. Errors: ${errors.join(', ')}`, 'error');
+            }
+            
+            // Reset form
+            selectedFiles = [];
+            document.getElementById('fileInput').value = '';
+            updateUploadUI();
+            loadPDFs(); // Refresh the list
+            
+            uploadBtn.disabled = false;
+            uploadLoading.style.display = 'none';
         }
         
         async function loadPDFs() {
