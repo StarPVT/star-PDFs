@@ -3,18 +3,366 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PDF Search</title>
-  <link rel="stylesheet" href="style.css">
+  <title>Star Private Secondary School - Report Card Search</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background-color: #f0f0f0;
+      min-height: 100vh;
+      color: #333;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #1e3a8a 0%, #0ea5e9 100%);
+      padding: 20px 0;
+      text-align: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    .school-name {
+      font-size: 24px;
+      font-weight: bold;
+      color: white;
+      margin-bottom: 5px;
+    }
+
+    .subtitle {
+      color: #bfdbfe;
+      font-size: 16px;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+
+    .search-section {
+      background: white;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      margin-bottom: 30px;
+      text-align: center;
+    }
+
+    .search-title {
+      font-size: 28px;
+      color: #2c3e50;
+      margin-bottom: 20px;
+    }
+
+    .search-bar {
+      margin: 20px 0;
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    #searchInput {
+      padding: 15px;
+      width: 300px;
+      font-size: 16px;
+      border: 2px solid #e0e0e0;
+      border-radius: 25px;
+      outline: none;
+      transition: border-color 0.3s;
+    }
+
+    #searchInput:focus {
+      border-color: #0ea5e9;
+    }
+
+    button {
+      padding: 15px 30px;
+      font-size: 16px;
+      cursor: pointer;
+      background: linear-gradient(45deg, #1e3a8a, #0ea5e9);
+      color: white;
+      border: none;
+      border-radius: 25px;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(14, 165, 233, 0.4);
+    }
+
+    #result {
+      margin-top: 20px;
+      padding: 15px;
+      border-radius: 10px;
+      min-height: 20px;
+    }
+
+    #result a {
+      color: #1e3a8a;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    #result a:hover {
+      text-decoration: underline;
+    }
+
+    .error {
+      color: #e74c3c;
+      background: #fdf2f2;
+      border: 1px solid #fecaca;
+    }
+
+    .success {
+      color: #27ae60;
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+    }
+
+    .instructions {
+      background: white;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      text-align: left;
+    }
+
+    .instructions-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      cursor: pointer;
+      padding: 10px;
+      background: #f8fafc;
+      border-radius: 10px;
+      transition: background 0.3s;
+    }
+
+    .instructions-header:hover {
+      background: #e2e8f0;
+    }
+
+    .instructions-title {
+      font-size: 20px;
+      font-weight: bold;
+      color: #2c3e50;
+    }
+
+    .toggle-icon {
+      font-size: 18px;
+      transition: transform 0.3s;
+    }
+
+    .instructions-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease-out;
+    }
+
+    .instructions-content.open {
+      max-height: 1000px;
+    }
+
+    .step {
+      margin-bottom: 20px;
+    }
+
+    .step-number {
+      background: #1e3a8a;
+      color: white;
+      width: 25px;
+      height: 25px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      margin-right: 10px;
+    }
+
+    .step-title {
+      font-weight: bold;
+      color: #2c3e50;
+      margin-bottom: 8px;
+    }
+
+    .tips {
+      background: #eff6ff;
+      border-left: 4px solid #0ea5e9;
+      padding: 20px;
+      margin-top: 20px;
+    }
+
+    .tips-title {
+      font-weight: bold;
+      color: #1e3a8a;
+      margin-bottom: 15px;
+    }
+
+    .tip {
+      margin-bottom: 10px;
+      display: flex;
+      align-items: flex-start;
+    }
+
+    .tip-icon {
+      color: #10b981;
+      margin-right: 8px;
+      font-weight: bold;
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        margin: 20px auto;
+        padding: 0 15px;
+      }
+      
+      .search-section, .instructions {
+        padding: 20px;
+      }
+      
+      #searchInput {
+        width: 250px;
+      }
+      
+      .search-bar {
+        flex-direction: column;
+        align-items: center;
+      }
+    }
+  </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Search for a Report Card</h1>
-    <div class="search-bar">
-      <input type="text" id="searchInput" placeholder="Enter exact name, e.g., doc1 (case-insensitive)">
-      <button onclick="searchPDF()">Search</button>
-    </div>
-    <div id="result"></div>
+  <div class="header">
+    <div class="school-name">Star Private Secondary School</div>
+    <div class="subtitle">Report Card Download Portal</div>
   </div>
-  <script src="script.js"></script>
+
+  <div class="container">
+    <div class="search-section">
+      <h1 class="search-title">Search for a Report Card</h1>
+      <div class="search-bar">
+        <input type="text" id="searchInput" placeholder="Enter exact report card name (e.g., student_name_term1)">
+        <button onclick="searchPDF()">Search</button>
+      </div>
+      <div id="result"></div>
+    </div>
+
+    <div class="instructions">
+      <div class="instructions-header" onclick="toggleInstructions()">
+        <div class="instructions-title">📋 How to Use This Website</div>
+        <div class="toggle-icon" id="toggleIcon">▼</div>
+      </div>
+      <div class="instructions-content" id="instructionsContent">
+        <div class="step">
+          <div class="step-title">
+            <span class="step-number">1</span>
+            Access the Website
+          </div>
+          <p>Open the website using the provided URL: <strong>https://star-pdfs.onrender.com</strong></p>
+        </div>
+
+        <div class="step">
+          <div class="step-title">
+            <span class="step-number">2</span>
+            Enter the Report Card Name
+          </div>
+          <p>In the search bar above, type the <strong>exact name</strong> of the report card you're looking for.</p>
+          <p>Example: To find <code>document1</code>, enter <code>document1</code>, <code>Document1</code>, or <code>DOCUMENT1</code> — the search is not case-sensitive.</p>
+          <p><strong>Note:</strong> The name must match the full filename exactly. Partial matches (e.g., <code>doc</code> for <code>document1</code>) will not work.</p>
+        </div>
+
+        <div class="step">
+          <div class="step-title">
+            <span class="step-number">3</span>
+            Search for the Report Card
+          </div>
+          <p>Click the "Search" button next to the search bar.</p>
+        </div>
+
+        <div class="step">
+          <div class="step-title">
+            <span class="step-number">4</span>
+            View Results
+          </div>
+          <p>• If a report card with the exact name is found, a download link will appear (e.g., "Found: Download document1").</p>
+          <p>• If no report card matches exactly, you'll see an error message like "No Report Card found with that exact name."</p>
+          <p>• No report cards are displayed on the page until you perform a valid search.</p>
+        </div>
+
+        <div class="step">
+          <div class="step-title">
+            <span class="step-number">5</span>
+            Download the Report Card
+          </div>
+          <p>Click the download link to save the report card file to your device.</p>
+        </div>
+
+        <div class="tips">
+          <div class="tips-title">💡 Tips</div>
+          <div class="tip">
+            <span class="tip-icon">✓</span>
+            <span><strong>Case-Insensitive Search:</strong> You can use any combination of uppercase or lowercase letters (e.g., <code>Document2</code>, <code>document2</code>, or <code>DOCUMENT2</code> will all find <code>Document2</code>).</span>
+          </div>
+          <div class="tip">
+            <span class="tip-icon">✓</span>
+            <span><strong>Exact Match Required:</strong> Enter the full filename. For example, searching <code>document</code> won't find <code>document1</code>.</span>
+          </div>
+          <div class="tip">
+            <span class="tip-icon">✓</span>
+            <span><strong>Empty Search:</strong> If you click "Search" without entering a name, an error message will prompt you to enter a report card name.</span>
+          </div>
+          <div class="tip">
+            <span class="tip-icon">✓</span>
+            <span><strong>Troubleshooting:</strong> If a report card isn't found, double-check the spelling and ensure the report card exists on the server. Contact the site administrator if issues persist.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function toggleInstructions() {
+      const content = document.getElementById('instructionsContent');
+      const icon = document.getElementById('toggleIcon');
+      
+      if (content.classList.contains('open')) {
+        content.classList.remove('open');
+        icon.textContent = '▼';
+      } else {
+        content.classList.add('open');
+        icon.textContent = '▲';
+      }
+    }
+
+    function searchPDF() {
+      const searchInput = document.getElementById('searchInput');
+      const result = document.getElementById('result');
+      const query = searchInput.value.trim();
+      
+      if (!query) {
+        result.innerHTML = '<div class="error">Please enter a report card name to search.</div>';
+        return;
+      }
+      
+      // Simulate search functionality - replace with your actual search logic
+      result.innerHTML = '<div>Searching...</div>';
+      
+      // This is where you would integrate with your existing search functionality
+      // For now, this is just a placeholder
+      setTimeout(() => {
+        result.innerHTML = '<div class="error">Please integrate this with your existing search functionality in script.js</div>';
+      }, 1000);
+    }
+
+    // Allow Enter key to trigger search
+    document.getElementById('searchInput').addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        searchPDF();
+      }
+    });
+  </script>
 </body>
 </html>
