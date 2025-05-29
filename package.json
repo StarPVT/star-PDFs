@@ -2,11 +2,9 @@
   "name": "pdf-search-website",
   "version": "1.0.0",
   "dependencies": {
-    "connect-pg-simple": "^9.0.1",
     "express": "^4.21.2",
-    "express-session": "^1.17.3",
     "multer": "^1.4.5-lts.1",
-    "pg": "^8.11.3"
+    "express-session": "^1.17.3"
   },
   "scripts": {
     "start": "node server.js"
