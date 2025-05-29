@@ -3,24 +3,30 @@ const fs = require('fs').promises;
 const path = require('path');
 const multer = require('multer');
 const session = require('express-session');
-const Redis = require('redis');
-const RedisStore = require('connect-redis').default;
+const pgSession = require('connect-pg-simple')(session);
+const { Pool } = require('pg');
 const app = express();
 const port = process.env.PORT || 3000;
 
-// Initialize Redis client
-const redisClient = Redis.createClient({
-  url: process.env.REDIS_URL || 'redis://localhost:6379'
+// Configure PostgreSQL pool
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
 });
-redisClient.connect().catch(console.error);
 
-// Configure session middleware with RedisStore
+// Configure session middleware with PostgreSQL store
 app.use(session({
-  store: new RedisStore({ client: redisClient }),
+  store: new pgSession({
+    pool: pool,
+    tableName: 'session' // Will be created automatically
+  }),
   secret: process.env.SESSION_SECRET || 'your-secret-key',
   resave: false,
   saveUninitialized: false,
-  cookie: { secure: process.env.NODE_ENV === 'production' }
+  cookie: { 
+    secure: process.env.NODE_ENV === 'production',
+    maxAge: 24 * 60 * 60 * 1000 // 24 hours
+  }
 }));
 
 // Configure multer for file uploads
