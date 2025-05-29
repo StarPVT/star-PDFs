@@ -53,3 +53,54 @@ button:hover {
 .error {
   color: red;
 }
+/* Existing styles */
+header {
+  text-align: center;
+  padding: 20px;
+}
+.logo {
+  max-width: 100px;
+}
+main {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+form {
+  margin-bottom: 20px;
+}
+input, button {
+  padding: 10px;
+  margin: 5px;
+}
+button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+button:hover {
+  background-color: #0056b3;
+}
+
+/* New styles for manage.html and login.html */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+th, td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+th {
+  background-color: #f2f2f2;
+}
+#upload-message {
+  color: green;
+  margin-top: 10px;
+}
+#upload-message.error {
+  color: red;
+}

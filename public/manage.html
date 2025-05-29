@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manage PDFs - Star Private Secondary School</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <header>
+    <img src="/logo.png" alt="School Logo" class="logo">
+    <h1>Star Private Secondary School</h1>
+    <a href="/logout">Logout</a>
+  </header>
+  <main>
+    <h2>Manage Report Cards</h2>
+    <section>
+      <h3>Upload New PDF</h3>
+      <form id="upload-form" enctype="multipart/form-data">
+        <input type="file" id="pdf" name="pdf" accept=".pdf" required>
+        <button type="submit">Upload</button>
+      </form>
+      <p id="upload-message"></p>
+    </section>
+    <section>
+      <h3>Existing PDFs</h3>
+      <table id="pdf-table">
+        <thead>
+          <tr>
+            <th>File Name</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="pdf-list"></tbody>
+      </table>
+    </section>
+  </main>
+  <script src="/manage.js"></script>
+</body>
+</html>
